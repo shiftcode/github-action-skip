@@ -5,6 +5,7 @@ inputs:
   skipOnCommitMsg:              # change this
     description: 'will cancel the current action if the commit message contains tiven value'
     default: ''
+    required: true
 runs:
   using: 'node12'
   main: 'lib/main.js'

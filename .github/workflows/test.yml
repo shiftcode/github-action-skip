@@ -17,3 +17,5 @@ jobs:
     - uses: ./
       with: 
         milliseconds: 1000
+    - name: Some Job
+      run: echo "sample"

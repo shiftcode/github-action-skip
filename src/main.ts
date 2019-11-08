@@ -5,10 +5,11 @@ const INPUT = 'skipOnCommitMsg'
 
 async function run() {
   try {
+    core.debug('start working')
     const skipOnCommitMsg = core.getInput(INPUT)
-    // git.GitHub.
-    core.debug(JSON.stringify(git.context))
     console.log(`skip CI on commit message ${skipOnCommitMsg}`)
+
+    core.debug(JSON.stringify(git.context))
 
     core.setFailed('skip CI')
   } catch (error) {
