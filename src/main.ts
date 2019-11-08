@@ -10,8 +10,10 @@ async function run() {
     console.log(`skip CI on commit message ${skipOnCommitMsg}`)
 
     console.log(JSON.stringify(git.context))
-
-    core.setFailed('skip CI')
+    const commitMessage = git.context.payload.head_commit.message
+    if (commitMessage.includes(skipOnCommitMsg)) {
+      core.setFailed(`stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>`)
+    }
   } catch (error) {
     core.setFailed(error.message)
   }
