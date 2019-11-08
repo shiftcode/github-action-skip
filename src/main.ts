@@ -1,19 +1,19 @@
-import * as core from '@actions/core';
-import {wait} from './wait'
+import * as core from '@actions/core'
+import * as git from '@actions/github'
+
+const INPUT = 'skipOnCommitMsg'
 
 async function run() {
   try {
-    const ms = core.getInput('milliseconds');
-    console.log(`Waiting ${ms} milliseconds ...`)
+    const skipOnCommitMsg = core.getInput(INPUT)
+    // git.GitHub.
+    core.debug(JSON.stringify(git.context))
+    console.log(`skip CI on commit message ${skipOnCommitMsg}`)
 
-    core.debug((new Date()).toTimeString())
-    await wait(parseInt(ms, 10));
-    core.debug((new Date()).toTimeString())
-
-    core.setOutput('time', new Date().toTimeString());
+    core.setFailed('skip CI')
   } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error.message)
   }
 }
 
-run();
+run()

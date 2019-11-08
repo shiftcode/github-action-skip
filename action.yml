@@ -1,10 +1,10 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Skip CI'
+description: 'Skip ci based on some input parameter'
+author: 'Michael Wittwer <michael.wittwer@shiftcode.ch>'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  skipOnCommitMsg:              # change this
+    description: 'will cancel the current action if the commit message contains tiven value'
+    default: ''
 runs:
   using: 'node12'
   main: 'lib/main.js'

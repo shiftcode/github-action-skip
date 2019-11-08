@@ -2,25 +2,24 @@
   "name": "typescript-action",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "action to skip a github action based on input",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
     "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
-  },
+  "repository": "https://github.com/shiftcode/github-action-skip",
   "keywords": [
     "actions",
     "node",
-    "setup"
+    "skip",
+    "ci"
   ],
-  "author": "YourNameOrOrganization",
+  "author": "Michael Wittwer <michael.wittwer@shiftcode.ch",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.0.0"
+    "@actions/core": "^1.0.0",
+    "@actions/github": "^1.1.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.13",
