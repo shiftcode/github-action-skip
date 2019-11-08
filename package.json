@@ -6,7 +6,9 @@
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "prepare-release": "npm run build && npm prune --production && git add node_modules",
+    "_commit": "git commit -a -m \"prod dependencies\""
   },
   "repository": "https://github.com/shiftcode/github-action-skip",
   "keywords": [
