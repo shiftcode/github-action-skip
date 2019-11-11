@@ -19,7 +19,10 @@ async function run() {
         const commitMessage = git.context.payload.head_commit.message
         if (commitMessage.includes(skipOnCommitMsg)) {
           core.setFailed(`stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>`)
+        }else{
+          console.log('no need to skip the build')
         }
+        break
       default:
         console.log(`no implementation for event type ${git.context.eventName}`)
     }
