@@ -10,7 +10,7 @@ async function run() {
     console.log(`skip CI on commit message ${skipOnCommitMsg}`)
 
     // core.startGroup('Expand to see the github context')
-    // console.log(JSON.stringify(git.context))
+    console.log(JSON.stringify(git.context))
     // core.endGroup()
     
     const commitMessage = git.context.payload.head_commit.message

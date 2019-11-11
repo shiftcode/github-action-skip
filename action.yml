@@ -2,8 +2,8 @@ name: 'Skip CI'
 description: 'Skip ci based on some input parameter'
 author: 'Michael Wittwer <michael.wittwer@shiftcode.ch>'
 inputs:
-  skipOnCommitMsg:              # change this
-    description: 'will cancel the current action if the commit message contains tiven value'
+  skipOnCommitMsg:
+    description: 'will cancel the current action if the commit message contains given value'
     default: ''
     required: true
 runs:
