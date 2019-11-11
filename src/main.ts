@@ -9,9 +9,7 @@ async function run() {
     const skipOnCommitMsg = core.getInput(INPUT)
     console.log(`skip CI on commit message ${skipOnCommitMsg}`)
 
-    // core.startGroup('Expand to see the github context')
-    console.log(JSON.stringify(git.context))
-    // core.endGroup()
+    // console.log(JSON.stringify(git.context))
 
     switch(git.context.eventName){
       case 'pull_request':
