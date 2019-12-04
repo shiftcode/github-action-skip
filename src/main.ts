@@ -15,7 +15,7 @@ async function run() {
       case 'pull_request':
         console.log('just proceed for pull request')
         break
-      case 'pull':
+      case 'push':
         const commitMessage = git.context.payload.head_commit.message
         if (commitMessage.includes(skipOnCommitMsg)) {
           core.setFailed(`stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>`)
