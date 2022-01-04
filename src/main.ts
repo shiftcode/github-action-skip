@@ -48,7 +48,7 @@ async function run() {
       //   // ok
       //   const commit = await response.json() as { message: string }
       //   const commitMessage = commit.message as string
-      const url = `https://api.github.com/repos/${github.context.payload.repository}/git/commits/${sha}`
+      const url = `https://api.github.com/repos/${github.context.payload.repository?.full_name}/git/commits/${sha}`
       console.log('fetch with url', url)
       const commit = (await fetch(url, ghToken)) as { sha: string, url: string, message: string } /* and others */
 
