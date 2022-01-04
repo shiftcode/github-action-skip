@@ -1,12 +1,12 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 
-enum INPUT_PARAMS{
+enum INPUT_PARAMS {
   SKIP_ON_COMMIT_MSG = 'skipOnCommitMsg',
   GH_TOKEN = 'githubToken'
 }
 
-enum OUTPUT_PARAMS{
+enum OUTPUT_PARAMS {
   SHOULD_EXECUTE = 'shouldExecute'
 }
 
@@ -20,35 +20,48 @@ async function run() {
     const octokit = github.getOctokit(ghToken)
     octokit.rest
 
-    const {eventName, sha} = github.context
+    const { eventName } = github.context
     core.info(`event name: ${eventName}`)
+    let sha = ''
+    switch (eventName) {
+      case 'pull_request':
+        core.info(JSON.stringify(github.context.payload.pull_request))
+        sha = github.context.payload.pull_request?.head.sha ?? `unknown`
+      case 'push':
+        sha = github.context.sha
+        break
+      default:
+        core.setFailed(`no implementation for event name ${eventName}`)
+        return
+    }
+
     core.info(`sha: ${sha}`)
-    if(sha){
+    if (sha) {
       const q = `hash:${sha}`
-      console.info(`q: ${q}`,)
-      const response = await octokit.rest.search.commits({q})
+      console.info(`q: ${q}`)
+      const response = await octokit.rest.search.commits({ q })
       core.info(`count of commits ${response.data.total_count}`)
-      for(const {commit} of response.data.items){
-      core.info(`message: ${commit.url}`)
-      core.info(`message: ${commit.message}`)
+      for (const { commit } of response.data.items) {
+        core.info(`message: ${commit.url}`)
+        core.info(`message: ${commit.message}`)
       }
 
-      if(true){
+      if (true) {
         core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, true)
         return
       }
     }
 
-      core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
+    core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
   } catch (error) {
     core.error('there was an error')
-    if(error instanceof Error){
+    if (error instanceof Error) {
       core.setFailed(error.message)
     }
 
-    try{
+    try {
       core.setFailed(JSON.stringify(error))
-    }catch (err){
+    } catch (err) {
       core.setFailed(`there was an error, can't print JSON.stringify failed`)
     }
   }
