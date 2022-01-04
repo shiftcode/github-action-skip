@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import * as git from '@actions/github'
+// import * as git from '@actions/github'
 
 const INPUT = 'skipOnCommitMsg'
 
@@ -8,7 +8,8 @@ async function run() {
     core.debug('start working')
     const skipOnCommitMsg = core.getInput(INPUT)
     console.log(`skip CI on commit message ${skipOnCommitMsg}`)
-    core.setFailed(`stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>`)
+    core.setOutput('shouldExecute', false)
+    // `<!--stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>-->`)
 // const ghToken = core.getInput()
 //     git.getOctokit()
 //     console.log(git.context.payload)
