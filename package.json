@@ -5,8 +5,7 @@
   "description": "action to skip a github action based on input",
   "main": "lib/main.js",
   "scripts": {
-    "build": "tsc",
-    "test": "jest"
+    "build": "tsc"
   },
   "repository": "https://github.com/shiftcode/github-action-skip",
   "keywords": [
@@ -18,15 +17,11 @@
   "author": "Michael Wittwer <michael.wittwer@shiftcode.ch",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.0.0",
-    "@actions/github": "^1.1.0"
+    "@actions/core": "^1.6.0",
+    "@actions/github": "^5.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.13",
-    "@types/node": "^12.0.4",
-    "jest": "^24.8.0",
-    "jest-circus": "^24.7.1",
-    "ts-jest": "^24.0.2",
-    "typescript": "^3.5.1"
+    "@types/node": "^16.0.0",
+    "typescript": "^4.5.4"
   }
 }
