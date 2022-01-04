@@ -15,7 +15,9 @@ async function run() {
       core.setFailed(`stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>`)
     }
   } catch (error) {
-    core.setFailed(error.message)
+    if(error instanceof Error){
+      core.setFailed(error.message)
+    }
   }
 }
 
