@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import { execSync } from 'child_process'
+import https from 'https'
 
 enum INPUT_PARAMS {
   SKIP_ON_COMMIT_MSG = 'skipOnCommitMsg',
@@ -39,7 +40,7 @@ async function run() {
 
     core.info(`sha: ${sha}`)
     if (sha) {
-      const commitMessage = execSync(`git log --format=%B -n 1 ${sha}`, { encoding: 'utf8' }).trim()
+      // const commitMessage = execSync(`git log --format=%B -n 1 ${sha}`, { encoding: 'utf8' }).trim()
       // const q = `hash:${sha}`
       // console.info(`q: ${q}`)
       // const response = await fetch(`https://api.github.com/repos/shiftcode/sc-commons/git/commits/${sha}`, { headers: new Headers({ Authorization: `token ${ghToken}` }) })
@@ -47,12 +48,17 @@ async function run() {
       //   // ok
       //   const commit = await response.json() as { message: string }
       //   const commitMessage = commit.message as string
-        core.info(`commit message to check against ${commitMessage}`)
+      const url = `https://api.github.com/repos/${github.context.payload.repository}/git/commits/${sha}`
+      console.log('fetch with url', url)
+      const commit = (await fetch(url, ghToken)) as { sha: string, url: string, message: string } /* and others */
 
-        if (commitMessage.includes(skipOnCommitMsg)) {
-          core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
-          return
-        }
+      const commitMessage = commit.message
+      core.info(`commit message to check against ${commitMessage}`)
+
+      if (commitMessage.includes(skipOnCommitMsg)) {
+        core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
+        return
+      }
       // } else {
       //   core.setFailed(`could not find commit for sha ${sha} -> got status code ${response.status}: ${response.statusText}`)
       // }
@@ -71,6 +77,25 @@ async function run() {
       core.setFailed(`there was an error, can't print JSON.stringify failed`)
     }
   }
+}
+
+async function fetch(url, token) {
+  return new Promise((resolve) => {
+    https.get(url, {
+      headers: {
+        Authorization: `token ${token}`,
+        'User-Agent': 'Github Skip Action',
+      },
+    }, res => {
+      let data = ''
+      res.on('data', chunk => {
+        data += chunk
+      })
+      res.on('end', () => {
+        resolve(JSON.parse(data))
+      })
+    })
+  })
 }
 
 run()
