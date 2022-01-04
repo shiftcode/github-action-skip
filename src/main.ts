@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import fetch, { Headers } from 'node-fetch'
+import { execSync } from 'child_process'
 
 enum INPUT_PARAMS {
   SKIP_ON_COMMIT_MSG = 'skipOnCommitMsg',
@@ -39,22 +39,23 @@ async function run() {
 
     core.info(`sha: ${sha}`)
     if (sha) {
-      const q = `hash:${sha}`
-      console.info(`q: ${q}`)
-      const response = await fetch(`https://api.github.com/repos/shiftcode/sc-commons/git/commits/${sha}`, { headers: new Headers({ Authorization: `token ${ghToken}` }) })
-      if (response.status >= 200 && response.status < 300) {
-        // ok
-        const commit = await response.json() as { message: string }
-        const commitMessage = commit.message as string
+      const commitMessage = execSync(`git log --format=%B -n 1 ${sha}`, { encoding: 'utf8' }).trim()
+      // const q = `hash:${sha}`
+      // console.info(`q: ${q}`)
+      // const response = await fetch(`https://api.github.com/repos/shiftcode/sc-commons/git/commits/${sha}`, { headers: new Headers({ Authorization: `token ${ghToken}` }) })
+      // if (response.status >= 200 && response.status < 300) {
+      //   // ok
+      //   const commit = await response.json() as { message: string }
+      //   const commitMessage = commit.message as string
         core.info(`commit message to check against ${commitMessage}`)
 
         if (commitMessage.includes(skipOnCommitMsg)) {
           core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
           return
         }
-      } else {
-        core.setFailed(`could not find commit for sha ${sha} -> got status code ${response.status}: ${response.statusText}`)
-      }
+      // } else {
+      //   core.setFailed(`could not find commit for sha ${sha} -> got status code ${response.status}: ${response.statusText}`)
+      // }
     }
 
     core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, true)
