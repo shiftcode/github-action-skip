@@ -16,10 +16,7 @@ async function run() {
     const skipOnCommitMsg = core.getInput(INPUT_PARAMS.SKIP_ON_COMMIT_MSG)
     const ghToken = core.getInput(INPUT_PARAMS.GH_TOKEN)
 
-    core.debug(`reading git commit message to resolve the output variable, output variable will be true if commit message contains message "${skipOnCommitMsg}"`)
-
-    const octokit = github.getOctokit(ghToken)
-    octokit.rest
+    core.info(`reading git commit message to resolve the output variable, output variable will be true if commit message contains message "${skipOnCommitMsg}"`)
 
     const { eventName } = github.context
     core.info(`event name: ${eventName}`)
@@ -43,7 +40,7 @@ async function run() {
       const commit = (await fetch(url, ghToken)) as { message: string } /* and others */
 
       const commitMessage = commit.message
-      core.info(`commit message to check against ${commitMessage}`)
+      core.info(`commit message to check against "${commitMessage}"`)
 
       if (commitMessage.includes(skipOnCommitMsg)) {
         core.info(`commit message includes skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = false`)
