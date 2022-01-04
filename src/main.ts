@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { execSync } from 'child_process'
 import https from 'https'
 
 enum INPUT_PARAMS {
@@ -38,32 +37,22 @@ async function run() {
         return
     }
 
-    core.info(`sha: ${sha}`)
     if (sha) {
-      // const commitMessage = execSync(`git log --format=%B -n 1 ${sha}`, { encoding: 'utf8' }).trim()
-      // const q = `hash:${sha}`
-      // console.info(`q: ${q}`)
-      // const response = await fetch(`https://api.github.com/repos/shiftcode/sc-commons/git/commits/${sha}`, { headers: new Headers({ Authorization: `token ${ghToken}` }) })
-      // if (response.status >= 200 && response.status < 300) {
-      //   // ok
-      //   const commit = await response.json() as { message: string }
-      //   const commitMessage = commit.message as string
       const url = `https://api.github.com/repos/${github.context.payload.repository?.full_name}/git/commits/${sha}`
-      console.log('fetch with url', url)
-      const commit = (await fetch(url, ghToken)) as { sha: string, url: string, message: string } /* and others */
+      core.info(`fetch commit with url: ${url}`)
+      const commit = (await fetch(url, ghToken)) as { message: string } /* and others */
 
       const commitMessage = commit.message
       core.info(`commit message to check against ${commitMessage}`)
 
       if (commitMessage.includes(skipOnCommitMsg)) {
+        core.info(`commit message includes skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = false`)
         core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
         return
       }
-      // } else {
-      //   core.setFailed(`could not find commit for sha ${sha} -> got status code ${response.status}: ${response.statusText}`)
-      // }
     }
 
+    core.info(`commit message does not include skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = true`)
     core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, true)
   } catch (error) {
     core.error('there was an error')
@@ -77,6 +66,7 @@ async function run() {
       core.setFailed(`there was an error, can't print JSON.stringify failed`)
     }
   }
+
 }
 
 async function fetch(url, token) {
