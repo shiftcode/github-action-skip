@@ -7,6 +7,10 @@ inputs:
     description: 'defines an output variable depending if the commit message contains the skipOnCommitMsg string (output: true) or not (false).'
     default: ''
     required: true
+  githubToken:
+    description: 'github token necesarry to fetch the commit message with sha of commit triggering this workflow'
+    default: ''
+    required: true
 outputs:
   shouldExecute:
     description: 'boolean value. True if the commit message contains the string provided in skipOnCommitMsg input param, false otherwise.'
