@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
+import fetch, { Headers } from 'node-fetch'
 
 enum INPUT_PARAMS {
   SKIP_ON_COMMIT_MSG = 'skipOnCommitMsg',
@@ -40,20 +41,19 @@ async function run() {
     if (sha) {
       const q = `hash:${sha}`
       console.info(`q: ${q}`)
-      const { data } = await octokit.rest.search.commits({ q })
-      core.info(`found ${data.total_count} commits for sha ${sha}`)
+      const response = await fetch(`https://api.github.com/repos/shiftcode/sc-commons/git/commits/${sha}`, { headers: new Headers({ Authorization: `token ${ghToken}` }) })
+      if (response.status >= 200 && response.status < 300) {
+        // ok
+        const commit = await response.json() as { message: string }
+        const commitMessage = commit.message as string
+        core.info(`commit message to check against ${commitMessage}`)
 
-      if (data.total_count === 0) {
-        core.setFailed(`could not find commit with sha ${sha}`)
-        return
-      }
-
-      const commitMessage = data.items[0].commit.message as string
-      core.info(`commit message to check against ${commitMessage}`)
-
-      if (commitMessage.includes(skipOnCommitMsg)) {
-        core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
-        return
+        if (commitMessage.includes(skipOnCommitMsg)) {
+          core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
+          return
+        }
+      } else {
+        core.setFailed(`could not find commit for sha ${sha} -> got status code ${response.status}: ${response.statusText}`)
       }
     }
 
