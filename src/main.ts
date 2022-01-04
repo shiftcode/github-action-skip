@@ -24,11 +24,15 @@ async function run() {
     core.info(`event name: ${eventName}`)
     core.info(`sha: ${sha}`)
     if(sha){
-      const q = encodeURIComponent(`hash:${sha}`)
-      core.info(`q: ${q}`,)
-      const commit = await octokit.rest.search.commits({q})
-      core.info(`count of commits ${commit.data.total_count}`)
-      core.info(`message: ${commit.data.items[0].commit.message}`)
+      const q = `hash:${sha}`
+      console.info(`q: ${q}`,)
+      const response = await octokit.rest.search.commits({q})
+      core.info(`count of commits ${response.data.total_count}`)
+      for(const {commit} of response.data.items){
+      core.info(`message: ${commit.url}`)
+      core.info(`message: ${commit.message}`)
+      }
+
       if(true){
         core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, true)
         return
