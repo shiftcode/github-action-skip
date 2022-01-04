@@ -1,11 +1,15 @@
+# check doc on https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs
 name: 'Skip CI'
-description: 'Skip ci based on some input parameter'
+description: 'Sets output param depending on commit message'
 author: 'Michael Wittwer <michael.wittwer@shiftcode.ch>'
 inputs:
-  skipOnCommitMsg:              # change this
-    description: 'will cancel the current action if the commit message contains tiven value'
+  skipOnCommitMsg:
+    description: 'defines an output variable depending if the commit message contains the skipOnCommitMsg string (output: true) or not (false).'
     default: ''
     required: true
+outputs:
+  shouldExecute:
+    description: 'boolean value. True if the commit message contains the string provided in skipOnCommitMsg input param, false otherwise.'
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'lib/main.js'

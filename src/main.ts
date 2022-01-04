@@ -1,27 +1,32 @@
 import * as core from '@actions/core'
-// import * as git from '@actions/github'
+import * as github from '@actions/github'
 
-const INPUT = 'skipOnCommitMsg'
-
+enum INPUT_PARAMS{
+  SKIP_ON_COMMIT_MSG = 'skipOnCommitMsg',
+  GH_TOKEN = 'githubToken'
+}
 async function run() {
   try {
-    core.debug('start working')
-    const skipOnCommitMsg = core.getInput(INPUT)
-    console.log(`skip CI on commit message ${skipOnCommitMsg}`)
-    core.setOutput('shouldExecute', false)
-    // `<!--stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>-->`)
-// const ghToken = core.getInput()
-//     git.getOctokit()
-//     console.log(git.context.payload)
-//     const commitMessage = git.context.payload.comment
-//     console.log('commit message', commitMessage)
-//     if (commitMessage.includes(skipOnCommitMsg)) {
-//       core.setFailed(`stopping here, because the commit message contains the provided input <${skipOnCommitMsg}>`)
-//     }
+    const skipOnCommitMsg = core.getInput(INPUT_PARAMS.SKIP_ON_COMMIT_MSG)
+    const ghToken = core.getInput(INPUT_PARAMS.GH_TOKEN)
+
+    core.debug(`reading git commit message to resolve the output variable, output variable will be true if commit message contains message "${skipOnCommitMsg}"`)
+
+    const octokit = github.getOctokit(ghToken)
+    octokit.rest
+
+    if(true){
+      core.setOutput('shouldExecute', false)
+    } else {
+      core.setOutput('shouldExecute', true)
+    }
   } catch (error) {
+    core.error('there was an error')
     if(error instanceof Error){
       core.setFailed(error.message)
     }
+
+    core.setFailed(error)
   }
 }
 

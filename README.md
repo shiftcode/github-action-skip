@@ -1,85 +1,47 @@
-# Create a JavaScript Action using TypeScript
+# shiftcode/github-action-skip
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+Github Actions have [native support](https://github.blog/changelog/2021-02-08-github-actions-skip-pull-request-and-push-workflows-with-skip-ci/) to skip an entire workflow depending on commit message. But since we rely on status checks
+for our Pull Requests to be green, we need another option.
 
-This template includes compilication support, tests, a validation workflow, publishing, and versioning guidance.  
+This action accepts an input string `skipOnCommitMsg` which will be used to check if the commit message contains the given string.
+If yes the output `shouldExecute` will be set to `false`. `true` otherwise. For full input / output list and other configurations check [`action.yml`](./action.yml).
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+## Example GitHub Workflow definition
+This example shows how to setup two dependant jobs, the second will only be executed if the output from `checkExecution` job is `false`.
 
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Master
-
-Install the dependencies  
-```bash
-$ npm install
+```yaml
+# jobs
+checkExecution:
+    runs-on: ubuntu-latest
+    outputs:
+      shouldExecute: ${{steps.step1.outputs.shouldExecute}}
+    steps:
+      - name: Check for execution
+        uses: shiftcode/github-action-skip@releases/v2-alpha.0
+        with:
+          skipOnCommitMsg: "[skip_workflow]"
+  build:
+    runs-on: ubuntu-latest
+    needs: checkExecution
+    if: needs.checkExecution.outputs.shouldExecute
+    steps:
 ```
-
-Build the typescript
-```bash
-$ npm run build
-```
-
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
-
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-
-...
-```
-
-## Change action.yml
-
-The action.yml contains defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
 
 ## Publish to a distribution branch
 
-Actions are run from GitHub repos.  We will create a releases branch and only checkin production modules (core in this case). 
+Actions will be consumed from GitHub repos. All the dependencies must be pushed there. This means for JS also 
+`node_module` must be published.
 
-Comment out node_modules in .gitignore and create a releases/v1 branch
+Comment out `node_modules`  in [.gitignore](./.gitignore) and create a `releases/**` branch
 ```bash
 # comment out in distribution branches
 # node_modules/
 ```
 
-```bash
-$ git checkout -b releases/v1
-$ git commit -a -m "prod dependencies"
-```
+Then run the following commands:
 
 ```bash
+$ git checkout -b releases/v1
 $ npm prune --production
 $ git add node_modules
 $ git commit -a -m "prod dependencies"
@@ -90,24 +52,13 @@ Your action is now published! :rocket:
 
 See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
 
-## Validate
-
-You can now validate the action by referencing the releases/v1 branch
-
-```yaml
-uses: actions/typescript-action@releases/v1
-with:
-  milliseconds: 1000
-```
-
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
-
 ## Usage:
 
 After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and tested action
 
 ```yaml
-uses: actions/typescript-action@v1
+uses: shiftcode/github-action-skip@v1
 with:
-  milliseconds: 1000
+  skipOnCommitMsg: "[skip build]"
+  githubtoken: ${{secrets.GH_TOKEN}}
 ```
