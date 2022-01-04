@@ -23,7 +23,6 @@ async function run() {
     let sha = ''
     switch (eventName) {
       case 'pull_request':
-        core.info(JSON.stringify(github.context.payload.pull_request))
         sha = github.context.payload.pull_request?.head.sha ?? `unknown`
         break
       case 'push':
@@ -38,6 +37,9 @@ async function run() {
       const url = `https://api.github.com/repos/${github.context.payload.repository?.full_name}/git/commits/${sha}`
       core.info(`fetch commit with url: ${url}`)
       const commit = (await fetch(url, ghToken)) as { message: string } /* and others */
+      core.startGroup('commit')
+      core.info(JSON.stringify(commit, undefined, 2))
+      core.endGroup()
 
       const commitMessage = commit.message
       core.info(`commit message to check against "${commitMessage}"`)
