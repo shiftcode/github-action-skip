@@ -2,8 +2,8 @@ import { Octokit } from '@octokit/rest'
 import * as https from 'https'
 
 const token = process.env.GH_TOKEN
-console.log(token)
-const sha = 'fd3d6b191cf773f68ca6dfc57bc52e28513fd8d1'
+const sha = process.env.GH_SHA
+console.log(`try resolving commit for sha ${sha} using gh token ${token}`)
 
 runWithOctokit()
   .then(() => runOther())

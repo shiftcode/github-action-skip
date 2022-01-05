@@ -14,17 +14,20 @@ This example shows how to setup two dependant jobs, the second will only be exec
 checkExecution:
     runs-on: ubuntu-latest
     outputs:
-      shouldExecute: ${{steps.step1.outputs.shouldExecute}}
+      shouldExecute: ${{ steps.stepCheckExecution.outputs.shouldExecute }}
     steps:
-      - name: Check for execution
+      - id: stepCheckExecution
+        name: Check for execution
         uses: shiftcode/github-action-skip@releases/v2-alpha.0
         with:
-          skipOnCommitMsg: "[skip_workflow]"
-  build:
+          skipOnCommitMsg: "[skip_build]"
+          githubToken: ${{secrets.GH_TOKEN_3}}
+build:
     runs-on: ubuntu-latest
     needs: checkExecution
-    if: needs.checkExecution.outputs.shouldExecute
-    steps:
+    # only execute if not skipped by commit message
+    if: needs.checkExecution.outputs.shouldExecute == 'true'
+    steps: ...
 ```
 
 ## Publish to a distribution branch

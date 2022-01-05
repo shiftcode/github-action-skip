@@ -1,6 +1,6 @@
 {
-  "name": "typescript-action",
-  "version": "0.0.0",
+  "name": "github-action-skip",
+  "version": "2.0.0",
   "private": true,
   "description": "action to skip a github action based on input",
   "main": "lib/main.js",
