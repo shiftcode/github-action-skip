@@ -1,5 +1,8 @@
 # shiftcode/github-action-skip
 
+![version](https://img.shields.io/github/last-commit/shiftcode/github-action-skip)
+![version](https://img.shields.io/github/tag/shiftcode/github-action-skip?label=version)
+
 Github Actions have [native support](https://github.blog/changelog/2021-02-08-github-actions-skip-pull-request-and-push-workflows-with-skip-ci/) to skip an entire workflow depending on commit message. But since we rely on status checks
 for our Pull Requests to be green, we need another option.
 
