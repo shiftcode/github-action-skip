@@ -1,5 +1,8 @@
 # shiftcode/github-action-skip
 
+![version](https://img.shields.io/github/last-commit/shiftcode/github-action-skip)
+![version](https://img.shields.io/github/tag/shiftcode/github-action-skip?label=version)
+
 Github Actions have [native support](https://github.blog/changelog/2021-02-08-github-actions-skip-pull-request-and-push-workflows-with-skip-ci/) to skip an entire workflow depending on commit message. But since we rely on status checks
 for our Pull Requests to be green, we need another option.
 
@@ -29,6 +32,13 @@ build:
     if: needs.checkExecution.outputs.shouldExecute == 'true'
     steps: ...
 ```
+
+## Development
+### new version
+1) implement your changes
+2) commit changes (pre-commit hook will do some code checks / changes and build the artifacts using ncc)
+3) set tag `git tag -a -m "my fancy release" v0.0.X`
+4) push with tags `git push --follow-tags`
 
 ## Publish to a distribution branch
 

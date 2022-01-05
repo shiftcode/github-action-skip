@@ -5,8 +5,7 @@ const token = process.env.GH_TOKEN
 const sha = process.env.GH_SHA
 console.log(`try resolving commit for sha ${sha} using gh token ${token}`)
 
-runWithOctokit()
-  .then(() => runOther())
+runWithOctokit().then(() => runOther())
 
 async function runWithOctokit() {
   console.log(`### execution with octokit client`)
@@ -38,7 +37,11 @@ async function runOther() {
   console.log(`### execution with plain http request`)
   const url = `https://api.github.com/repos/shiftcode/sc-commons/git/commits/${sha}`
   console.log(url)
-  const commit = (await fetch(url)) as { sha: string, url: string, message: string } /* and others */
+  const commit = (await fetch(url)) as {
+    sha: string
+    url: string
+    message: string
+  } /* and others */
   console.log(`----------------- ${commit.url} -----------------`)
   console.log(commit.message)
   console.log('-------------------------------------------------')
@@ -46,19 +49,23 @@ async function runOther() {
 
 async function fetch(url) {
   return new Promise((resolve) => {
-    https.get(url, {
-      headers: {
-        Authorization: `token ${token}`,
-        'User-Agent': 'Github Skip Action',
+    https.get(
+      url,
+      {
+        headers: {
+          Authorization: `token ${token}`,
+          'User-Agent': 'Github Skip Action',
+        },
       },
-    }, res => {
-      let data = ''
-      res.on('data', chunk => {
-        data += chunk
-      })
-      res.on('end', () => {
-        resolve(JSON.parse(data))
-      })
-    })
+      (res) => {
+        let data = ''
+        res.on('data', (chunk) => {
+          data += chunk
+        })
+        res.on('end', () => {
+          resolve(JSON.parse(data))
+        })
+      },
+    )
   })
 }

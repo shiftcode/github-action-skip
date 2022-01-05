@@ -1,30 +1,48 @@
 {
   "name": "github-action-skip",
-  "version": "2.0.0",
+  "version": "0.0.0",
   "private": true,
-  "description": "action to skip a github action based on input",
-  "main": "lib/main.js",
-  "scripts": {
-    "build": "tsc"
-  },
-  "repository": "https://github.com/shiftcode/github-action-skip",
+  "description": "action to define an output depending on commit message",
   "keywords": [
     "actions",
     "node",
     "skip",
     "ci"
   ],
-  "author": "Michael Wittwer <michael.wittwer@shiftcode.ch",
+  "repository": "https://github.com/shiftcode/github-action-skip",
   "license": "MIT",
+  "author": "shiftcode GmbH <team@shiftcode.ch>",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "ncc build ./src/index.ts -o ./dist",
+    "build:watch": "ncc build ./src/index.ts -o ./dist --watch",
+    "lint": "eslint --fix src/*.ts",
+    "lint:staged": "eslint --fix",
+    "precommit": "npm run lint && npm run build && git add dist/index.js",
+    "prettier": "prettier --write src/*.ts",
+    "prettier:staged": "prettier --write"
+  },
   "dependencies": {
     "@actions/core": "^1.6.0",
-    "@actions/github": "^5.0.0"
+    "@actions/github": "^5.0.0",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
-    "tslib": "^2.3.1",
-    "@types/node": "^16.0.0",
-    "typescript": "^4.5.4",
+    "@commitlint/cli": "^16.0.1",
+    "@commitlint/config-conventional": "^16.0.0",
+    "@commitlint/prompt-cli": "^16.0.0",
     "@octokit/core": "^3.5.1",
-    "@octokit/rest": "^18.12.0"
+    "@octokit/rest": "^18.12.0",
+    "@shiftcode/build-helper": "^4.0.0",
+    "@types/node": "^16.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
+    "@vercel/ncc": "^0.33.1",
+    "eslint": "^8.6.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.5",
+    "prettier": "^2.5.1",
+    "sort-package-json": "^1.53.1",
+    "typescript": "^4.5.4"
   }
 }
