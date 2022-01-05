@@ -36,7 +36,7 @@ build:
 ## Development
 ### new version
 1) implement your changes
-2) commit with `npx commit`
+2) commit changes (pre-commit hook will do some code checks / changes and build the artifacts using ncc)
 3) set tag `git tag -a -m "my fancy release" v0.0.X`
 4) push with tags `git push --follow-tags`
 
