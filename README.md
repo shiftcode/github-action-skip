@@ -39,39 +39,3 @@ build:
 2) commit changes (pre-commit hook will do some code checks / changes and build the artifacts using ncc)
 3) set tag `git tag -a -m "my fancy release" v0.0.X`
 4) push with tags `git push --follow-tags`
-
-## Publish to a distribution branch
-
-Actions will be consumed from GitHub repos. All the dependencies must be pushed there. This means for JS also 
-`node_module` must be published.
-
-Comment out `node_modules`  in [.gitignore](./.gitignore) and create a `releases/**` branch
-```bash
-# comment out in distribution branches
-# node_modules/
-```
-
-Then run the following commands:
-
-```bash
-$ git checkout -b releases/v1
-$ npm prune --production
-$ git add node_modules
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Usage:
-
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and tested action
-
-```yaml
-uses: shiftcode/github-action-skip@v1
-with:
-  skipOnCommitMsg: "[skip build]"
-  githubtoken: ${{secrets.GH_TOKEN}}
-```
