@@ -30,6 +30,13 @@ build:
     steps: ...
 ```
 
+## Development
+### new version
+1) implement your changes
+2) commit with `npx commit`
+3) set tag `git tag -a -m "my fancy release" v0.0.X`
+4) push with tags `git push --follow-tags`
+
 ## Publish to a distribution branch
 
 Actions will be consumed from GitHub repos. All the dependencies must be pushed there. This means for JS also 

@@ -1,7 +1,7 @@
 # check doc on https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs
 name: 'Skip CI'
 description: 'Sets output param depending on commit message'
-author: 'Michael Wittwer <michael.wittwer@shiftcode.ch>'
+author: 'shiftcode GmbH <team@shiftcode.ch>'
 inputs:
   skipOnCommitMsg:
     description: 'defines an output variable depending if the commit message contains the skipOnCommitMsg string (output: true) or not (false).'
@@ -16,4 +16,4 @@ outputs:
     description: 'boolean value. True if the commit message contains the string provided in skipOnCommitMsg input param, false otherwise.'
 runs:
   using: 'node16'
-  main: 'lib/main.js'
+  main: 'dist/index.js'

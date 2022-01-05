@@ -4,11 +4,11 @@ import https from 'https'
 
 enum INPUT_PARAMS {
   SKIP_ON_COMMIT_MSG = 'skipOnCommitMsg',
-  GH_TOKEN = 'githubToken'
+  GH_TOKEN = 'githubToken',
 }
 
 enum OUTPUT_PARAMS {
-  SHOULD_EXECUTE = 'shouldExecute'
+  SHOULD_EXECUTE = 'shouldExecute',
 }
 
 async function run() {
@@ -16,7 +16,9 @@ async function run() {
     const skipOnCommitMsg = core.getInput(INPUT_PARAMS.SKIP_ON_COMMIT_MSG)
     const ghToken = core.getInput(INPUT_PARAMS.GH_TOKEN)
 
-    core.info(`reading git commit message to resolve the output variable, output variable will be true if commit message contains message "${skipOnCommitMsg}"`)
+    core.info(
+      `reading git commit message to resolve the output variable, output variable will be true if commit message contains message "${skipOnCommitMsg}"`,
+    )
 
     const { eventName } = github.context
     core.info(`event name: ${eventName}`)
@@ -36,7 +38,9 @@ async function run() {
     if (sha) {
       const url = `https://api.github.com/repos/${github.context.payload.repository?.full_name}/git/commits/${sha}`
       core.info(`fetch commit with url: ${url}`)
-      const commit = (await fetch(url, ghToken)) as { message: string } /* and others */
+      const commit = (await fetch(url, ghToken)) as {
+        message: string
+      } /* and others */
       core.startGroup('commit')
       core.info(JSON.stringify(commit, undefined, 2))
       core.endGroup()
@@ -45,13 +49,17 @@ async function run() {
       core.info(`commit message to check against "${commitMessage}"`)
 
       if (commitMessage.includes(skipOnCommitMsg)) {
-        core.info(`commit message includes skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = false`)
+        core.info(
+          `commit message includes skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = false`,
+        )
         core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, false)
         return
       }
     }
 
-    core.info(`commit message does not include skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = true`)
+    core.info(
+      `commit message does not include skip message (${skipOnCommitMsg}) -> set output ${OUTPUT_PARAMS.SHOULD_EXECUTE} = true`,
+    )
     core.setOutput(OUTPUT_PARAMS.SHOULD_EXECUTE, true)
   } catch (error) {
     core.error('there was an error')
@@ -65,25 +73,28 @@ async function run() {
       core.setFailed(`there was an error, can't print JSON.stringify failed`)
     }
   }
-
 }
 
 async function fetch(url, token) {
   return new Promise((resolve) => {
-    https.get(url, {
-      headers: {
-        Authorization: `token ${token}`,
-        'User-Agent': 'Github Skip Action',
+    https.get(
+      url,
+      {
+        headers: {
+          Authorization: `token ${token}`,
+          'User-Agent': 'Github Skip Action',
+        },
       },
-    }, res => {
-      let data = ''
-      res.on('data', chunk => {
-        data += chunk
-      })
-      res.on('end', () => {
-        resolve(JSON.parse(data))
-      })
-    })
+      (res) => {
+        let data = ''
+        res.on('data', (chunk) => {
+          data += chunk
+        })
+        res.on('end', () => {
+          resolve(JSON.parse(data))
+        })
+      },
+    )
   })
 }
 

@@ -1,0 +1,16 @@
+# we use tslint instead of ng lint, because we can't use --project (tsconfig specifying files with include, exclude )
+# and --files argument pointing to other files
+src/{**/,}!(*.+(spec|test)).ts:
+  - npm run prettier:staged
+  - npm run lint:staged
+# test folder and specs
+test/{**/,}*.ts,src/{**/,}*.+(spec|test).ts:
+  - npm run prettier:staged
+  - npm run lint:staged
+# e2e tests (mostly in client projects)
+e2e/{**/,}*.ts:
+  - npm run prettier:staged
+  - npm run lint:staged
+# sort package.json keys
+./package.json:
+  - sort-package-json
