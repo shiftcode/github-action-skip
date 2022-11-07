@@ -8,7 +8,7 @@ inputs:
     default: ''
     required: true
   githubToken:
-    description: 'github token necesarry to fetch the commit message with sha of commit triggering this workflow'
+    description: 'github token necessary to fetch the commit message with sha of commit triggering this workflow'
     default: ''
     required: true
 outputs:
