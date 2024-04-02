@@ -15,5 +15,5 @@ outputs:
   shouldExecute:
     description: 'boolean value. True if the commit message contains the string provided in skipOnCommitMsg input param, false otherwise.'
 runs:
-  using: 'node16'
+  using: 'node20'
   main: 'dist/index.js'
