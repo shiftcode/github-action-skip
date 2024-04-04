@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 20.11
           cache: 'npm'
-            # allow packages inside this repo to consume from our private npm registry
+      # allow packages inside this repo to consume from our private npm registry
       - name: Authenticate against NPM
         run: |
           npm config set //npm.pkg.github.com/:_authToken=$GH_TOKEN
