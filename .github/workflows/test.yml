@@ -9,15 +9,28 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: npm ci
-    - name: Build
-      run: npm run build
-    - name: Check for Execution
-      uses: ./
-      with:
-        skipOnCommitMsg: "sample"
-        ghToken: ${{secrects.GH_TOKEN_3}}
-    - name: Some Job
-      run: echo "sample"
+      - name: Checkout source
+        uses: actions/checkout@v4.1.1
+      - name: Install Node (v20) 
+        id: node-install
+        uses: actions/setup-node@v4.0.2
+        with:
+          node-version: 20.11
+          cache: 'npm'
+      # allow packages inside this repo to consume from our private npm registry
+      - name: Authenticate against NPM
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken=$GH_TOKEN
+          npm config list
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_PKG_REGISTRY_READ }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Check for Execution
+        uses: ./
+        with:
+          skipOnCommitMsg: "sample"
+      - name: Some Job
+        run: echo "sample"

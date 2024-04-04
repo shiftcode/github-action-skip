@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
-    "target": "es2021", // node >= 16.x
-    "module": "commonjs",
+    "target": "es2022", // node >= 18.x
+    "module": "Node16",
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
