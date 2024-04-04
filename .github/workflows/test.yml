@@ -16,6 +16,13 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: 20.11
+        # allow packages inside this repo to consume from our private npm registry
+        - name: Authenticate against NPM
+        run: |
+          npm config set //npm.pkg.github.com/:_authToken=$GH_TOKEN
+          npm config list
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_PKG_REGISTRY_READ }}  
       - name: Install dependencies
         run: npm ci
       - name: Build
@@ -24,6 +31,6 @@ jobs:
         uses: ./
         with:
           skipOnCommitMsg: "sample"
-          ghToken: ${{secrets.GH_TOKEN_3}}
+          ghToken: ${{ secrets.GH_TOKEN_3 }}
       - name: Some Job
         run: echo "sample"
