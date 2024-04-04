@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-node@v4.0.2
         with:
           node-version: 20.11
+          cache: 'npm'
         # allow packages inside this repo to consume from our private npm registry
         - name: Authenticate against NPM
         run: |
