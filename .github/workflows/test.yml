@@ -25,6 +25,6 @@ jobs:
         uses: ./
         with:
           skipOnCommitMsg: "sample"
-          ghToken: ${{secrects.GH_TOKEN_3}}
+          ghToken: ${{secrets.GH_TOKEN_3}}
       - name: Some Job
         run: echo "sample"
