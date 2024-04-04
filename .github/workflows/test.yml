@@ -25,7 +25,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN_PKG_REGISTRY_READ }}
       - name: Install dependencies
-        run: npm ci
+        run: HUSKY=0 npm ci
       - name: Build
         run: npm run build
       - name: Check for Execution
