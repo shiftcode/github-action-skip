@@ -23,7 +23,7 @@ jobs:
           npm config set //npm.pkg.github.com/:_authToken=$GH_TOKEN
           npm config list
         env:
-          githubToken: ${{ secrets.GH_TOKEN_PKG_REGISTRY_READ }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN_PKG_REGISTRY_READ }}
       - name: Install dependencies
         run: npm ci
       - name: Build
