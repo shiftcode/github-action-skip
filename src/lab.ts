@@ -5,13 +5,13 @@ const token = process.env.GH_TOKEN
 const sha = process.env.GH_SHA
 console.log(`try resolving commit for sha ${sha} using gh token ${token}`)
 
-runWithOctokit().then(() => runOther())
+await runWithOctokit().then(() => runOther())
 
 async function runWithOctokit() {
   console.log(`### execution with octokit client`)
   const o = new Octokit({ auth: token })
 
-  const { data } = await o.request('/user')
+  const { data } = (await o.request('/user')) as { data: { login: string } }
   console.log(`current user: ${data.login}`)
 
   // query try out
@@ -47,7 +47,7 @@ async function runOther() {
   console.log('-------------------------------------------------')
 }
 
-async function fetch(url) {
+async function fetch(url: string) {
   return new Promise((resolve) => {
     https.get(
       url,

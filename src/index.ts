@@ -25,6 +25,7 @@ async function run() {
     let sha = ''
     switch (eventName) {
       case 'pull_request':
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
         sha = github.context.payload.pull_request?.head.sha ?? `unknown`
         break
       case 'push':
@@ -69,13 +70,13 @@ async function run() {
 
     try {
       core.setFailed(JSON.stringify(error))
-    } catch (err) {
+    } catch {
       core.setFailed(`there was an error, can't print JSON.stringify failed`)
     }
   }
 }
 
-async function fetch(url, token) {
+async function fetch(url: string, token: string) {
   return new Promise((resolve) => {
     https.get(
       url,
@@ -98,4 +99,4 @@ async function fetch(url, token) {
   })
 }
 
-run()
+await run()
