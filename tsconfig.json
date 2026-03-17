@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "skipLibCheck": true,
-    "target": "es2022", // node >= 18.x
+    "target": "ES2024", // node >= 24
     "module": "Node16",
     "outDir": "./dist",
     "rootDir": "./src",
@@ -13,8 +13,5 @@
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true
   },
-  "exclude": [
-    "node_modules",
-    "**/*.test.ts"
-  ]
+  "exclude": ["node_modules", "**/*.test.ts"]
 }
